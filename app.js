@@ -9,8 +9,8 @@ const server = http.createServer(app);
 const io = socketIo(server);
 const pathAPI = "/api";
 
-app.get("/", async (req, res) => {
-  res.send("bonjour sur la page d'acceuil");
+app.get("/", (req, res) => {
+  res.send("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
 app.use(pathAPI, materialRouter);
