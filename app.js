@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 app.get("/", (req, res) => {
-  res.send("Bonjour ca marche heu peu etre");
+  res.send("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
 const PORT = 3008;
