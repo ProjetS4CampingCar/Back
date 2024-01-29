@@ -1,5 +1,6 @@
 const express = require("express");
 const socketIo = require("socket.io");
+const sequelize = require("./src/db/sequelize/sequelize");
 
 const app = express();
 const http = require("http");
