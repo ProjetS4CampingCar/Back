@@ -1,10 +1,8 @@
-const express = require("express");
-const sequelize = require("../db/sequelize/sequelize");
-
-const router = new express.Router();
+const { material } = require("../db/sequelize/sequelize");
+const router = require("./router");
 
 router.get("/materials", async (req, res) => {
-  const test = await sequelize.material.findAll();
+  const test = await material.findAll();
   res.json(test);
 });
 
