@@ -1,18 +1,19 @@
 const express = require("express");
 const socketIo = require("socket.io");
 const sequelize = require("./src/db/sequelize/sequelize");
-const materialRouter = require("./src/router/material");
+const materialRouter = require("./src/router/materialRouter");
 
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const io = socketIo(server);
+const pathAPI = "/api";
 
 app.get("/", async (req, res) => {
   res.send("bonjour sur la page d'acceuil");
 });
 
-app.use(materialRouter);
+app.use(pathAPI, materialRouter);
 
 const PORT = 3008;
 server.listen(PORT, () => {

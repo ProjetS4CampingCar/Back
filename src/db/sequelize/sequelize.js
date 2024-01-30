@@ -6,10 +6,9 @@ const sequelize = new Sequelize("info8", "root", "", {
   host: "localhost",
 });
 
-const material = materialModel(sequelize, DataTypes);
-
 sequelize.sync().then(() => {
   console.log("La connexion avec la base de données fonctionne correctement");
 });
+const material = materialModel(sequelize, DataTypes);
 
 module.exports = { material };
