@@ -1,11 +1,15 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, json } = require("sequelize");
 const materialModel = require("../../modele/material");
 
-const sequelize = new Sequelize("info8", "info8", "Q3P", {
+const sequelize = new Sequelize("info8", "root", "", {
   dialect: "mysql",
   host: "localhost",
 });
 
-//const material = materialModel(sequelize, DataTypes);
+const material = materialModel(sequelize, DataTypes);
 
-sequelize.sync().then(console.log("La connection avec la base marche bien"));
+sequelize.sync().then(() => {
+  console.log("La connexion avec la base de données fonctionne correctement");
+});
+
+module.exports = { material };
