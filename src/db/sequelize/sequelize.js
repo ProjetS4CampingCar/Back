@@ -1,10 +1,11 @@
 const { Sequelize, DataTypes, json } = require("sequelize");
 const materialModel = require("../../modele/material");
+require("dotenv").config();
 
 const sequelize = new Sequelize(
-  process.env.database,
-  process.env.username,
-  process.env.password,
+  process.env.DB_NAME,
+  process.env.DB_USERNAME,
+  process.env.DB_PASSWORD,
   {
     dialect: "mysql",
     host: "localhost",
