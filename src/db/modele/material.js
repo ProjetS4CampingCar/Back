@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "material",
+    "Material",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "material",
+      tableName: "Material",
       timestamps: false,
     }
   );
