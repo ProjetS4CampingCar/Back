@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, json } = require("sequelize");
-const materialModel = require("../../modele/material");
+const materialModel = require("../modele/material");
 require("dotenv").config();
 
 const sequelize = new Sequelize(
