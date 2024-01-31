@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, json } = require("sequelize");
-const materialModel = require("../../modele/material");
+const materialModel = require("../modele/material");
 
 const sequelize = new Sequelize("info8", "root", "", {
   dialect: "mysql",
