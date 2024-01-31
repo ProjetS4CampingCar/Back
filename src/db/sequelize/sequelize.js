@@ -11,4 +11,4 @@ sequelize.sync().then(() => {
 });
 const material = materialModel(sequelize, DataTypes);
 
-module.exports = { material };
+module.exports = { material, sequelize };
