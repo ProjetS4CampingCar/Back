@@ -12,9 +12,13 @@ const sequelize = new Sequelize(
   }
 );
 
-sequelize.sync().then(() => {
-  console.log("La connexion avec la base de données fonctionne correctement");
-});
+sequelize.authenticate()
+  .then(() => {
+    console.log("La connexion avec la base de données fonctionne correctement");
+  })
+  .catch((error) => {
+    console.error("Erreur de connexion avec la base de données:", error);
+  });
 const material = materialModel(sequelize, DataTypes);
 
 module.exports = { material };
