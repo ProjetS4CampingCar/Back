@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           unique: true
         },
+        password: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
         phone_number: {
           type: DataTypes.STRING,
           unique: true

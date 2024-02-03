@@ -3,7 +3,7 @@ const socketIo = require("socket.io");
 const sequelize = require("./src/db/sequelize/sequelize");
 const materialRouter = require("./src/router/materialRouter");
 const reservationRouter = require("./src/router/reservationRouter");
-
+const bodyParser = require("body-parser");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
@@ -14,7 +14,8 @@ app.get("/", (req, res) => {
   res.send("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
-// app.use(pathAPI, materialRouter);
+app.use(bodyParser.json());
+app.use(pathAPI, materialRouter);
 app.use(pathAPI, reservationRouter);
 
 

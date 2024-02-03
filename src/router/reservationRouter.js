@@ -5,7 +5,7 @@ const reservation = require("../db/modele/reservation");
 router.post("/reservation", reservationController.addReservation)
 router.get("/reservation/:id", reservationController.getOneReservation)
 router.get("/reservation", reservationController.getAllReservation)
-router.put("/reservation/:id", reservationController.upadteReservation)
-
+router.put("/reservation/:id", reservationController.updateReservation)
+router.delete("/reservation/:id", reservationController.deleteReservation)
 
 module.exports = router;
