@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes, json } = require("sequelize");
+const userModel = require("../modele/user");
 const materialModel = require("../modele/material");
+const reservationModel = require("../modele/reservation");
 require("dotenv").config();
 
 const sequelize = new Sequelize(
@@ -12,9 +14,14 @@ const sequelize = new Sequelize(
   }
 );
 
-sequelize.sync().then(() => {
+const user = userModel(sequelize, DataTypes);
+const material = materialModel(sequelize, DataTypes);
+const reservation = reservationModel(sequelize, DataTypes)
+
+// false means that we don't drop the tables to recreate them
+sequelize.sync({force: true}).then(() => {
   console.log("La connexion avec la base de données fonctionne correctement");
 });
-const material = materialModel(sequelize, DataTypes);
 
-module.exports = { material };
+
+module.exports = { user, material, reservation };
