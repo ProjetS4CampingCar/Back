@@ -85,7 +85,7 @@ const modifyMaterialGet = async (req, res) => {
 
 const newMaterial = async (req) => {
   const body = req.body;
-  console.log("ca passe mais rien" + req);
+
   const name = body.name;
   const description = body.description;
   const category = body.category;
