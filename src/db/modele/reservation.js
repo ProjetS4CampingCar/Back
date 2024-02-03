@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       {
-        freezeTableName: true,
+        tableName: "Reservation",
         timestamps: false
       }
     );
