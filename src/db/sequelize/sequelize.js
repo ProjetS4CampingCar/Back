@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes, json } = require("sequelize");
 const materialModel = require("../modele/material");
+const userModel = require("../modele/user")
+
 require("dotenv").config();
 
 const sequelize = new Sequelize(
@@ -16,5 +18,5 @@ sequelize.sync().then(() => {
   console.log("La connexion avec la base de données fonctionne correctement");
 });
 const material = materialModel(sequelize, DataTypes);
-
-module.exports = { material, sequelize };
+const user = userModel(sequelize, DataTypes);
+module.exports = { material, user, sequelize };

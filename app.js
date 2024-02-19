@@ -2,7 +2,9 @@ const express = require("express");
 const socketIo = require("socket.io");
 const sequelize = require("./src/db/sequelize/sequelize");
 const materialRouter = require("./src/router/materialRouter");
+const router = require("src/router/router.js")
 const jwt = require("jsonwebtoken");
+
 
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
@@ -22,7 +24,8 @@ app.get("/", (req, res) => {
   res.json("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
-app.use(pathAPI, materialRouter);
+//app.use(pathAPI, materialRouter);
+app.use(pathAPI, router);
 
 const PORT = 3008;
 server.listen(PORT, () => {
