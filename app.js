@@ -2,9 +2,8 @@ const express = require("express");
 const socketIo = require("socket.io");
 const sequelize = require("./src/db/sequelize/sequelize");
 const materialRouter = require("./src/router/materialRouter");
-const router = require("src/router/router.js")
+const router = require("./src/router/router");
 const jwt = require("jsonwebtoken");
-
 
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
