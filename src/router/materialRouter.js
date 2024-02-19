@@ -30,17 +30,17 @@ router.get(
   }
 );
 
-router.post("/materials/create", async (req, res) => {
+router.post("/materials", async (req, res) => {
   const createMaterials = await materialsController.newMaterial(req);
   res.json(createMaterials);
 });
 
-router.delete("/materials/delete/:id", async (req, res) => {
+router.delete("/materials/:id", async (req, res) => {
   const deleteMaterials = await materialsController.removeMaterial(req, res);
   res.json(deleteMaterials);
 });
 
-router.put("/materials/update", async (req, res) => {
+router.put("/materials", async (req, res) => {
   const updateMaterials = await materialsController.modifyMaterial(req, res);
   res.json(updateMaterials);
 });
