@@ -2,10 +2,12 @@ const express = require("express");
 const socketIo = require("socket.io");
 const sequelize = require("./src/db/sequelize/sequelize");
 const materialRouter = require("./src/router/materialRouter");
+const jwt = require("jsonwebtoken");
 
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 
+const cors = require("cors");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
@@ -14,9 +16,10 @@ const pathAPI = "/api";
 
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("Commande Pour lancer NODE JS est (npx nodemon app.js)");
+  res.json("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
 app.use(pathAPI, materialRouter);
