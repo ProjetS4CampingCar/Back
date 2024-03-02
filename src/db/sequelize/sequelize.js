@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes, json } = require("sequelize");
+const { Sequelize, Model, DataTypes, json } = require("sequelize");
 const userModel = require("../modele/user");
 const materialModel = require("../modele/material");
 const reservationModel = require("../modele/reservation");
@@ -16,9 +16,10 @@ const sequelize = new Sequelize(
   }
 );
 
+
 const user = userModel(sequelize, DataTypes);
 const material = materialModel(sequelize, DataTypes);
-const reservation = reservationModel(sequelize, DataTypes);
+const reservation = reservationModel(Model, sequelize, DataTypes);
 const reservationMaterial = reservationMaterialModel(sequelize, DataTypes);
 
 

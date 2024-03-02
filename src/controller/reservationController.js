@@ -1,5 +1,5 @@
 const { reservation, material, reservationMaterial, sequelize } = require("../db/sequelize/sequelize");
-const { QueryTypes } = require('sequelize');
+const { QueryTypes, Op } = require('sequelize');
 
 // req.params -> /:id
 // req.query -> ?key=value
@@ -101,15 +101,33 @@ let getAllReservation = async (req, res) => {
 let updateReservation = async (req, res) => {
     try {
 
-        let id = req.params.id;
+        let id = parseInt(req.params.id);
 
-        let total_price = (await material.sum('price', {where: { id: {[Op.in]: req.body.id_materials }}})).toFixed(2);
+        let r = await reservation.findAll({
+            attributes: ["start", "end"],
+            where: {
+                id: id
+            }
+        });
+        if (r.length == 0){
+            throw new Error("this reservation does not exist");
+        }
+        let data = r[0].dataValues;
 
-        let data = {
-            start: req.body.start,
-            end: req.body.end,
-            total_price: total_price,
-        };
+        if ("start" in req.body){
+            data["start"] = req.body.start;
+        }
+        if ("end" in req.body){
+            data["end"] = req.body.end;
+        }
+        if ("id_materials" in req.body){
+            let total_price = (await material.sum('price', {where: { id: {[Op.in]: req.body.id_materials }}})).toFixed(2);
+            data["total_price"] = total_price;
+
+            // get the ids reserved
+            // compare to the new ids
+            // remove from
+        }
 
         let result = await reservation.update(data, {
             where : {
@@ -120,7 +138,7 @@ let updateReservation = async (req, res) => {
         res.status(200).json(result);
 
     } catch (err) {
-
+        console.log(err);
         res.status(500).json(err);
 
     }

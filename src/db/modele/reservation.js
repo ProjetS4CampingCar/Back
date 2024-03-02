@@ -1,7 +1,7 @@
-module.exports = (sequelize, DataTypes) => {
-    return sequelize.define(
-      "Reservation",
-      {
+module.exports = (model, sequelize, DataTypes) => {
+    class Reservation extends model {}
+  
+    return Reservation.init({
         id: {
           type: DataTypes.INTEGER,
           primaryKey: true,
@@ -12,14 +12,6 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           validate : {
             isDate: true,
-            notTooSoon(value) {
-              let d = new Date(value); // date to compare
-              let c = new Date(); // current date
-              c = c.setDate(c.getDate() + 1); // add one day
-              if (d < c) {
-                throw new Error("The starting date must be at least one day from today");
-              }
-            }
           }
         },
         end: {
@@ -63,11 +55,20 @@ module.exports = (sequelize, DataTypes) => {
           model: 'User',
           key: 'id'
         }
-      },
-      {
+      }, {
+        sequelize,
+        modelName: "Reservation",
         tableName: "Reservation",
         timestamps: false,
         validate: {
+          lockedAtDayMinus1() {
+            let d = new Date(this.start); // date to compare
+            let c = new Date(); // current date
+            c.setDate(c.getDate() + 1); // add one day
+            if (c >= d) {
+              throw new Error("You can't make or update reservation at d-1");
+            }
+          },
           endAfterStart(){
             if (this.end <= this.start){
               throw new Error("The end of the reservation cannot be before the start.")
@@ -82,11 +83,12 @@ module.exports = (sequelize, DataTypes) => {
             if (this.end - this.start > 31 * 24 * 60 * 60 * 1000 ){
               throw new Error("The reservation must last less that 31 days.");
             }
-          },
+          }
         }
       }
     );
   };
+  
   
 
 
