@@ -9,10 +9,13 @@ const http = require("http");
 const server = http.createServer(app);
 const io = socketIo(server);
 const pathAPI = "/api";
+const cors = require("cors");
 
 app.get("/", (req, res) => {
   res.send("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
+
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(pathAPI, materialRouter);
@@ -23,7 +26,7 @@ const PORT = 3008;
 server.listen(PORT, () => {
   console.log(
     "le serveur est bien sur le port" +
-      PORT +
-      " et tourne sur http://localhost:3008/"
+    PORT +
+    " et tourne sur http://localhost:3008/"
   );
 });

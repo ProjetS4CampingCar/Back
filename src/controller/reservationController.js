@@ -18,7 +18,7 @@ let validateMaterialsToReserve = async (id_material, date_start, date_end) => {
 
     let ids = await sequelize.query(sql, {
         replacements: {
-            id_materials : id_material,
+            id_materials: id_material,
             start: date_start,
             end: date_end,
             interval: 1
@@ -28,20 +28,28 @@ let validateMaterialsToReserve = async (id_material, date_start, date_end) => {
     // exit if found already reserved material
     if (ids.length > 0) {
         console.log(ids);
-        throw new Error("These (by id) articles are already reserved at the time choosen :" + ids.reduce((acc, el) => {return acc + " " + el.id_material.toString()}, ""));
+        throw new Error("These (by id) articles are already reserved at the time choosen :" + ids.reduce((acc, el) => { return acc + " " + el.id_material.toString() }, ""));
     }
 
-    
+
 }
 
 // create
 let addReservation = async (req, res) => {
     const t = await sequelize.transaction();
     try {
+
+        // validate dates
+        let toValidate = await reservation.build({
+            start: req.body.start,
+            end: req.body.end,
+            total_price: 0,
+        })
+        await toValidate.validate();
+
         await validateMaterialsToReserve(req.body.id_materials.map(Number), req.body.start, req.body.end);
         // sum of column price of material where id is in array of ids and get the precision to 2 decimal
-        let total_price = (await material.sum('price', {where: { id: {[Op.in]: req.body.id_materials }}})).toFixed(2);
-
+        let total_price = (await material.sum('price', { where: { id: { [Op.in]: req.body.id_materials } } })).toFixed(2);
 
         let reservationWanted = await reservation.create({
             start: req.body.start,
@@ -49,20 +57,20 @@ let addReservation = async (req, res) => {
             total_price: total_price,
             id_user: req.body.id_user,
         });
-        
-        let mats = await material.findAll({where: {id: {[Op.in]: req.body.id_materials}}});
-        
+
+        let mats = await material.findAll({ where: { id: { [Op.in]: req.body.id_materials } } });
+
         reservationWanted.addMaterials(mats);
-        
+
         await t.commit();
 
         res.status(200).json(reservationWanted);
 
 
     } catch (err) {
-        res.status(500).json({err: err.toString()});
+        res.status(500).json({ err: err.toString() });
         await t.rollback();
-        
+
     }
 }
 
@@ -102,20 +110,20 @@ let updateReservation = async (req, res) => {
         let id = parseInt(req.params.id);
 
         let reserv = await reservation.findByPk(id);
-        if (reserv == null){
+        if (reserv == null) {
             throw new Error("this reservation does not exist");
         }
- 
-        let data = { 
-            start:  reserv.dataValues.start,
+
+        let data = {
+            start: reserv.dataValues.start,
             end: reserv.dataValues.end,
             total_price: reserv.dataValues.total_price // here to pass the validate()
         }
 
-        if ("start" in req.body){
+        if ("start" in req.body) {
             data["start"] = req.body.start;
         }
-        if ("end" in req.body){
+        if ("end" in req.body) {
             data["end"] = req.body.end;
         }
 
@@ -123,7 +131,7 @@ let updateReservation = async (req, res) => {
         let toValidate = await reservation.build(data)
         await toValidate.validate();
 
-        if ("id_materials" in req.body){
+        if ("id_materials" in req.body) {
             // find out wich material to add and wich to remove
 
             // array of materials
@@ -140,28 +148,28 @@ let updateReservation = async (req, res) => {
             }
 
             // array of materials
-            add = await material.findAll({where: {id: {[Op.in]: add}}});
-            
+            add = await material.findAll({ where: { id: { [Op.in]: add } } });
+
             // array of materials to remove
             let del = old.filter((element) => !req.body.id_materials.includes(element.dataValues.id));
 
             // check price
             let price_to_add = add.reduce((accumulator, currentValue) => {
-                    return accumulator + currentValue.dataValues.price;
-                }, 0.0);
+                return accumulator + currentValue.dataValues.price;
+            }, 0.0);
             let price_to_remove = del.reduce((accumulator, currentValue) => {
                 return accumulator + currentValue.dataValues.price;
-                }, 0.0);
+            }, 0.0);
 
             let total_price = reserv.dataValues.total_price + price_to_add - price_to_remove;
-            
+
             // check new price !should find another way to do that, it's duplicate with model validator
             if (total_price < 0.0 || 20000.0 < total_price) {
                 throw new Error("The total price must be between 0.0 and 20000.0.");
             }
             // put the total_pricet to the data to update
             data["total_price"] = total_price;
-            
+
             // add & remove 
             reserv.addMaterials(add);
             reserv.removeMaterials(del);
@@ -169,15 +177,15 @@ let updateReservation = async (req, res) => {
         }
 
         let result = await reservation.update(data, {
-            where : {
-                id : id
+            where: {
+                id: id
             }
         })
 
         res.status(200).json(result);
 
     } catch (err) {
-        res.status(500).json({err: err.toString()});
+        res.status(500).json({ err: err.toString() });
     }
 }
 
@@ -213,7 +221,7 @@ let test = async (req, res) => {
     } catch (err) {
         res.status(500).json(err);
     }
-    
+
 }
 
 module.exports = {
@@ -230,27 +238,27 @@ module.exports = {
 
 
 // gt = new Date(req.body.start);
-        // lt = new Date(req.body.end);
-        // gt.setDate(gt.getDate() - 1);
-        // lt.setDate(lt.getDate() - 1);
+// lt = new Date(req.body.end);
+// gt.setDate(gt.getDate() - 1);
+// lt.setDate(lt.getDate() - 1);
 
-        // ids = await reservationMaterial.findAll({
-        //     where: {
-        //         [Op.and] : {
-        //             id_material : {
-        //                 [Op.in] : req.body.id_materials
-        //             },
-        //             [Op.or] : {
-        //                 end : { // "start - interval"
-        //                     [Op.gt] : gt
-        //                 },
-        //                 start: { // "interval - end"
-        //                     [Op.lt] : lt
-        //                 }
-        //             }
-        //         }
-        //     },
-        //     include: {model : reservation}
-        //     ,
-        //     attributes: ['id_material']
-        // })
+// ids = await reservationMaterial.findAll({
+//     where: {
+//         [Op.and] : {
+//             id_material : {
+//                 [Op.in] : req.body.id_materials
+//             },
+//             [Op.or] : {
+//                 end : { // "start - interval"
+//                     [Op.gt] : gt
+//                 },
+//                 start: { // "interval - end"
+//                     [Op.lt] : lt
+//                 }
+//             }
+//         }
+//     },
+//     include: {model : reservation}
+//     ,
+//     attributes: ['id_material']
+// })
