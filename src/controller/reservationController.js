@@ -1,9 +1,8 @@
-const { reservation, material, reservationMaterial, sequelize } = require("../db/sequelize/sequelize");
+const { reservation, material, sequelize } = require("../db/sequelize/sequelize");
 const { QueryTypes, Op } = require('sequelize');
 
 // req.params -> /:id
 // req.query -> ?key=value
-//
 
 let validateMaterialsToReserve = async (id_material, date_start, date_end) => {
     let sql = "SELECT DISTINCT R_M.id_material FROM Reservation_Material R_M\
@@ -190,7 +189,6 @@ let updateReservation = async (req, res) => {
 }
 
 // delete
-
 let deleteReservation = async (req, res) => {
     try {
 
@@ -211,54 +209,10 @@ let deleteReservation = async (req, res) => {
     }
 }
 
-let test = async (req, res) => {
-    try {
-        gt = new Date("2018-04-01T13:34:00.00");
-        lt = new Date();
-        gt.setDate(gt.getDate() - 1);
-        // lt.setDate((new Date(req.body.end)).getDate() - 1);
-        res.status(200).send(gt)
-    } catch (err) {
-        res.status(500).json(err);
-    }
-
-}
-
 module.exports = {
     addReservation,
     getOneReservation,
     getAllReservation,
     updateReservation,
     deleteReservation,
-    test
 };
-
-
-
-
-
-// gt = new Date(req.body.start);
-// lt = new Date(req.body.end);
-// gt.setDate(gt.getDate() - 1);
-// lt.setDate(lt.getDate() - 1);
-
-// ids = await reservationMaterial.findAll({
-//     where: {
-//         [Op.and] : {
-//             id_material : {
-//                 [Op.in] : req.body.id_materials
-//             },
-//             [Op.or] : {
-//                 end : { // "start - interval"
-//                     [Op.gt] : gt
-//                 },
-//                 start: { // "interval - end"
-//                     [Op.lt] : lt
-//                 }
-//             }
-//         }
-//     },
-//     include: {model : reservation}
-//     ,
-//     attributes: ['id_material']
-// })
