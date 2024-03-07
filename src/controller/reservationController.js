@@ -6,7 +6,7 @@ const { QueryTypes, Op } = require('sequelize');
 //
 
 let validateMaterialsToReserve = async (id_material, date_start, date_end) => {
-    let sql = "SELECT R_M.id_material FROM Reservation_Material R_M\
+    let sql = "SELECT DISTINCT R_M.id_material FROM Reservation_Material R_M\
                 JOIN Reservation R ON\
                     R.id = R_M.id_reservation\
                 WHERE\
