@@ -1,8 +1,12 @@
 const { Sequelize, Model, DataTypes, json } = require("sequelize");
 const userModel = require("../modele/user");
 const materialModel = require("../modele/material");
+<<<<<<< HEAD
 const reservationModel = require("../modele/reservation");
 const reservationMaterialModel = require("../modele/reservationMaterial");
+=======
+const userModel = require("../modele/user")
+>>>>>>> auth-user
 
 require("dotenv").config();
 
@@ -47,7 +51,13 @@ material.belongsToMany(reservation, {
 sequelize.sync({force: false, logging : console.log}).then(() => {
   console.log("La connexion avec la base de données fonctionne correctement");
 });
+<<<<<<< HEAD
 
 
 
 module.exports = {sequelize, user, material, reservation, reservationMaterial};
+=======
+const material = materialModel(sequelize, DataTypes);
+const user = userModel(sequelize, DataTypes);
+module.exports = { material, user, sequelize };
+>>>>>>> auth-user

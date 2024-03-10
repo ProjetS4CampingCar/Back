@@ -1,9 +1,18 @@
 const express = require("express");
 const socketIo = require("socket.io");
 const sequelize = require("./src/db/sequelize/sequelize");
+<<<<<<< HEAD
 const materialRouter = require("./src/router/materialRouter");
 const reservationRouter = require("./src/router/reservationRouter");
 const bodyParser = require("body-parser");
+=======
+const router = require("./src/router/allRouter");
+
+const bodyParser = require("body-parser");
+const helmet = require("helmet");
+
+const cors = require("cors");
+>>>>>>> auth-user
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
@@ -11,16 +20,25 @@ const io = socketIo(server);
 const pathAPI = "/api";
 const cors = require("cors");
 
+app.use(bodyParser.json());
+app.use(helmet());
+app.use(cors());
+
 app.get("/", (req, res) => {
-  res.send("Commande Pour lancer NODE JS est (npx nodemon app.js)");
+  res.json("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
+<<<<<<< HEAD
 app.use(cors());
 
 app.use(bodyParser.json());
 app.use(pathAPI, materialRouter);
 app.use(pathAPI, reservationRouter);
 
+=======
+//app.use(pathAPI, materialRouter);
+app.use(pathAPI, router);
+>>>>>>> auth-user
 
 const PORT = 3008;
 server.listen(PORT, () => {
