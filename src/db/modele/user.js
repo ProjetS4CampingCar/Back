@@ -29,10 +29,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-
       authorization: {
         type: DataTypes.ENUM("user", "moderator", "admin"),
         allowNull: false,
+      },
+      token: {
+        type: DataTypes.TEXT(),
+        allowNull: true,
       },
     },
     {
