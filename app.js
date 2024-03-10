@@ -5,33 +5,31 @@ const materialRouter = require("./src/router/materialRouter");
 const reservationRouter = require("./src/router/reservationRouter");
 const bodyParser = require("body-parser");
 const router = require("./src/router/allRouter");
-
-const bodyParser = require("body-parser");
 const helmet = require("helmet");
-
 const cors = require("cors");
-const app = express();
 const http = require("http");
+
+const pathAPI = "/api";
+
+const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const pathAPI = "/api";
-const cors = require("cors");
 
-app.use(bodyParser.json());
-app.use(helmet());
-app.use(cors());
+
+
 
 app.get("/", (req, res) => {
   res.json("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
-app.use(cors());
-
+// parse body of request 
 app.use(bodyParser.json());
+// encodage 
+app.use(helmet());
+// cross origini ...
+app.use(cors());
 app.use(pathAPI, materialRouter);
 app.use(pathAPI, reservationRouter);
-
-//app.use(pathAPI, materialRouter);
 app.use(pathAPI, router);
 
 const PORT = 3008;

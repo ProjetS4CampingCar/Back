@@ -3,7 +3,7 @@ const userModel = require("../modele/user");
 const materialModel = require("../modele/material");
 const reservationModel = require("../modele/reservation");
 const reservationMaterialModel = require("../modele/reservationMaterial");
-const userModel = require("../modele/user")
+
 
 require("dotenv").config();
 
