@@ -4,6 +4,14 @@ const { QueryTypes, Op } = require('sequelize');
 // req.params -> /:id
 // req.query -> ?key=value
 
+let nbDayBetweenTwoDates = (start, end) => {
+    let date1 = new Date(start);
+    let date2 = new Date(end);
+    let deltaTimeInMs = date2.getTime() - date1.getTime();
+    let deltaDays = Math.round(deltaTimeInMs / (1000 * 3600 * 24));
+    return deltaDays;
+}
+
 let validateMaterialsToReserve = async (id_material, date_start, date_end) => {
     let sql = "SELECT DISTINCT R_M.id_material FROM Reservation_Material R_M\
                 JOIN Reservation R ON\
@@ -47,8 +55,10 @@ let addReservation = async (req, res) => {
         await toValidate.validate();
 
         await validateMaterialsToReserve(req.body.id_materials.map(Number), req.body.start, req.body.end);
+
         // sum of column price of material where id is in array of ids and get the precision to 2 decimal
         let total_price = (await material.sum('price', { where: { id: { [Op.in]: req.body.id_materials } } })).toFixed(2);
+        total_price *= nbDayBetweenTwoDates(req.body.start, req.body.end);
 
         let reservationWanted = await reservation.create({
             start: req.body.start,
@@ -161,6 +171,7 @@ let updateReservation = async (req, res) => {
             }, 0.0);
 
             let total_price = reserv.dataValues.total_price + price_to_add - price_to_remove;
+            total_price *= nbDayBetweenTwoDates(req.body.start, req.body.end);
 
             // check new price !should find another way to do that, it's duplicate with model validator
             if (total_price < 0.0 || 20000.0 < total_price) {
