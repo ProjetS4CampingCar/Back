@@ -6,9 +6,7 @@ const {
 } = require("../db/crud/materialCrud");
 
 const getMaterials = async (req) => {
-  const test = await material.findAll({
-    attributes: ["name"],
-  });
+  const test = await material.findAll();
   const test2 = await sequelize.query("SELECT * FROM material", {
     type: sequelize.QueryTypes.SELECT,
   });
