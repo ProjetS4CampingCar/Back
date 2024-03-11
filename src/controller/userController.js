@@ -46,7 +46,8 @@ const login = async (req, res) => {
     });
 
     if (foundUsers.length === 0) {
-      throw new Error("Email invalide");
+      // throw new Error("Email invalide");
+      return res.send(false);
     }
 
     const foundUser = foundUsers[0];

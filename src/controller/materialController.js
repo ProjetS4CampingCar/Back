@@ -7,11 +7,8 @@ const {
 } = require("../db/crud/materialCrud");
 
 const getMaterials = async (req) => {
-  const test = await material.findAll();
-  const test2 = await sequelize.query("SELECT * FROM material", {
-    type: sequelize.QueryTypes.SELECT,
-  });
-  return { test, test2 };
+  const res = await material.findAll();
+  return res;
 };
 
 const newMaterialGet = async (req) => {
@@ -92,7 +89,7 @@ const newMaterial = async (req) => {
   const state = body.state;
 
   if (isNaN(price) || price < 0) {
-    return res 
+    return res
       .status(400)
       .send('Le prix doit être positif')
   }
@@ -107,12 +104,12 @@ const newMaterial = async (req) => {
 
   console.log(req.body)
   const m = await createMaterial(material, data);
-  const newpath = "./src/pictures/materials/" + m.id  + ".jpeg"
-  console.log(old_path,newpath);
-  await fs.rename(old_path,newpath,(e)=>{
-    if(e)throw e;
+  const newpath = "./src/pictures/materials/" + m.id + ".jpeg"
+  console.log(old_path, newpath);
+  await fs.rename(old_path, newpath, (e) => {
+    if (e) throw e;
     console.log("File rename");
-  }); 
+  });
   return m;
 };
 
