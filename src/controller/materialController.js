@@ -1,3 +1,4 @@
+const fs = require('fs')
 const { material, sequelize } = require("../db/sequelize/sequelize");
 const {
   createMaterial,
@@ -83,7 +84,7 @@ const modifyMaterialGet = async (req, res) => {
 
 const newMaterial = async (req) => {
   const body = req.body;
-
+  const old_path = req.file.path
   const name = body.name;
   const description = body.description;
   const category = body.category;
@@ -91,9 +92,9 @@ const newMaterial = async (req) => {
   const state = body.state;
 
   if (isNaN(price) || price < 0) {
-    return res
+    return res 
       .status(400)
-      .send("L'ID du matériel doit être un entier positif.");
+      .send('Le prix doit être positif')
   }
 
   const data = {
@@ -104,8 +105,15 @@ const newMaterial = async (req) => {
     state: state,
   };
 
+  console.log(req.body)
   const m = await createMaterial(material, data);
-  return m ? true : false;
+  const newpath = "./src/pictures/materials/" + m.id  + ".jpeg"
+  console.log(old_path,newpath);
+  await fs.rename(old_path,newpath,(e)=>{
+    if(e)throw e;
+    console.log("File rename");
+  }); 
+  return m;
 };
 
 const removeMaterial = async (req, res) => {
@@ -148,6 +156,7 @@ const modifyMaterial = async (req, res) => {
   const m = await updateMaterial(material, materialId, data);
   return m ? true : false;
 };
+
 
 module.exports = {
   getMaterials,
