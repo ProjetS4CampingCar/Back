@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 // encodage 
 app.use(helmet());
 // cross origini ...
-app.use(cors());
+app.use(cors({ origin: "51.68.91.213" }));
 app.use(pathAPI, materialRouter);
 app.use(pathAPI, reservationRouter);
 app.use(pathAPI, router);
