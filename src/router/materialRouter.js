@@ -18,7 +18,7 @@ const upload = multer({ storage: storage });
 
 router.get("/materials", async (req, res) => {
   const getMaterials = await materialsController.getMaterials(req);
-  res.json(getMaterials.test);
+  res.json(getMaterials);
 });
 
 router.get(
