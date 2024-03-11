@@ -41,7 +41,7 @@ material.belongsToMany(reservation, {
 });
 
 // false means that we don't drop the tables to recreate them
-sequelize.sync({ force: true, logging: console.log }).then(() => {
+sequelize.sync({ force: false, logging: console.log }).then(() => {
   console.log("La connexion avec la base de données fonctionne correctement");
 });
 
