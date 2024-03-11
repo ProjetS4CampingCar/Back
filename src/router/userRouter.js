@@ -12,6 +12,8 @@ router.post(
   userController.infoUser
 );
 router.post("/verifyToken", userController.verifyToken);
+router.post("/encryptCookie", upload.none(), userController.encryptCookie);
+router.post("/decryptCookie", upload.none(), userController.decryptCookie);
 
 router.delete("/infoUser/:token", userController.removeToken);
 

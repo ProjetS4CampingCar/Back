@@ -4,7 +4,6 @@ const materialModel = require("../modele/material");
 const reservationModel = require("../modele/reservation");
 const reservationMaterialModel = require("../modele/reservationMaterial");
 
-
 require("dotenv").config();
 
 const sequelize = new Sequelize(
@@ -17,37 +16,39 @@ const sequelize = new Sequelize(
   }
 );
 
-
 const user = userModel(sequelize, DataTypes);
 const material = materialModel(sequelize, DataTypes);
 const reservation = reservationModel(Model, sequelize, DataTypes);
 const reservationMaterial = reservationMaterialModel(sequelize, DataTypes);
 
-
 user.hasMany(reservation, {
-  foreignKey: 'id_user',
-
+  foreignKey: "id_user",
 });
 reservation.belongsTo(user, {
-  foreignKey: 'id_user'
-})
+  foreignKey: "id_user",
+});
 
 // Reservation_Material
 reservation.belongsToMany(material, {
   through: reservationMaterial,
-  foreignKey: 'id_reservation', // replaces `reservationId`
-  otherKey: 'id_material'
+  foreignKey: "id_reservation", // replaces `reservationId`
+  otherKey: "id_material",
 });
 material.belongsToMany(reservation, {
   through: reservationMaterial,
-  foreignKey: 'id_material', // replaces `materialId`
-  otherKey: 'id_reservation'
+  foreignKey: "id_material", // replaces `materialId`
+  otherKey: "id_reservation",
 });
 
 // false means that we don't drop the tables to recreate them
-sequelize.sync({ force: false, logging: console.log }).then(() => {
+sequelize.sync({ force: true, logging: console.log }).then(() => {
   console.log("La connexion avec la base de données fonctionne correctement");
 });
 
-module.exports = { sequelize, user, material, reservation, reservationMaterial };
-
+module.exports = {
+  sequelize,
+  user,
+  material,
+  reservation,
+  reservationMaterial,
+};

@@ -8,6 +8,8 @@ const {
   selectUserByToken,
   updateUserToken,
 } = require("../db/crud/userCrud");
+const crypto = require("crypto");
+
 const register = async (req, res) => {
   console.log(req.body);
 
@@ -106,12 +108,11 @@ const verifyToken = (req, res) => {
       const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
       const currentTimestamp = Math.floor(Date.now() / 1000); // Obtenez le timestamp actuel en secondes
       if (decodedToken.exp < currentTimestamp) {
-        return res.status(401).json({ foundUser: false });
+        return res.json({ foundUser: false });
       }
       return { valid: true };
     } catch (error) {
       // Gérer les erreurs de vérification du token (par exemple, token invalide)
-      console.error("Erreur lors de la vérification du token:", error);
       updateUserToken(user, token.email, { token: null });
       return res.json({
         message: "Token invalide",
@@ -131,6 +132,32 @@ const removeToken = (req, res) => {
   updateUserToken(user, token, { token: null });
 };
 
+const encryptCookie = async (req, res) => {
+  const mail = req.body.email;
+  const encrypt = await encryptData(mail, process.env.COOKIE_CRYPT);
+  res.send(encrypt);
+};
+
+const decryptCookie = async (req, res) => {
+  const mail = req.body.email;
+  const decrypt = await decryptData(mail, process.env.COOKIE_CRYPT);
+  res.send(decrypt);
+};
+
+function encryptData(data, key) {
+  const cipher = crypto.createCipher("aes-256-cbc", key);
+  let encryptedData = cipher.update(data, "utf8", "hex");
+  encryptedData += cipher.final("hex");
+  return encryptedData;
+}
+
+function decryptData(encryptedData, key) {
+  const decipher = crypto.createDecipher("aes-256-cbc", key);
+  let decryptedData = decipher.update(encryptedData, "hex", "utf8");
+  decryptedData += decipher.final("utf8");
+  return decryptedData;
+}
+
 module.exports = {
   login,
   register,
@@ -138,4 +165,6 @@ module.exports = {
   verifyTokenMiddleware,
   removeToken,
   verifyToken,
+  encryptCookie,
+  decryptCookie,
 };
