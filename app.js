@@ -15,16 +15,13 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-
-
-
 app.get("/", (req, res) => {
   res.json("Commande Pour lancer NODE JS est (npx nodemon app.js)");
 });
 
-// parse body of request 
+// parse body of request
 app.use(bodyParser.json());
-// encodage 
+// encodage
 app.use(helmet());
 // cross origini ...
 app.use(cors());
@@ -36,7 +33,7 @@ const PORT = 3008;
 server.listen(PORT, () => {
   console.log(
     "le serveur est bien sur le port" +
-    PORT +
-    " et tourne sur http://localhost:3008/"
+      PORT +
+      " et tourne sur http://localhost:3008/"
   );
 });

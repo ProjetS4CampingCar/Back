@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require("fs");
 const { material, sequelize } = require("../db/sequelize/sequelize");
 const {
   createMaterial,
@@ -81,7 +81,7 @@ const modifyMaterialGet = async (req, res) => {
 
 const newMaterial = async (req) => {
   const body = req.body;
-  const old_path = req.file.path
+  const old_path = req.file.path;
   const name = body.name;
   const description = body.description;
   const category = body.category;
@@ -89,9 +89,7 @@ const newMaterial = async (req) => {
   const state = body.state;
 
   if (isNaN(price) || price < 0) {
-    return res
-      .status(400)
-      .send('Le prix doit être positif')
+    return res.status(400).send("Le prix doit être positif");
   }
 
   const data = {
@@ -102,9 +100,9 @@ const newMaterial = async (req) => {
     state: state,
   };
 
-  console.log(req.body)
+  console.log(req.body);
   const m = await createMaterial(material, data);
-  const newpath = "./src/pictures/materials/" + m.id + ".jpeg"
+  const newpath = "./src/pictures/materials/" + m.id + ".jpeg";
   console.log(old_path, newpath);
   await fs.rename(old_path, newpath, (e) => {
     if (e) throw e;
@@ -153,7 +151,6 @@ const modifyMaterial = async (req, res) => {
   const m = await updateMaterial(material, materialId, data);
   return m ? true : false;
 };
-
 
 module.exports = {
   getMaterials,
