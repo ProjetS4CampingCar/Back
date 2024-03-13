@@ -1,6 +1,5 @@
 const router = require("./router");
 const materialsController = require("../controller/materialController");
-
 const multer = require("multer");
 const material = require("../db/modele/material");
 
@@ -50,12 +49,17 @@ router.post("/materials", upload.single("file"), async (req, res) => {
   res.json(createMaterials);
 });
 
+router.get("/materials/:id", async (req, res) => {
+  const getmaterielById = await materialsController.getmaterielById(req);
+  res.json(getmaterielById);
+});
+
 router.delete("/materials/:id", async (req, res) => {
   const deleteMaterials = await materialsController.removeMaterial(req, res);
   res.json(deleteMaterials);
 });
 
-router.put("/materials", async (req, res) => {
+router.put("/materials", upload.single("file"), async (req, res) => {
   const updateMaterials = await materialsController.modifyMaterial(req, res);
   res.json(updateMaterials);
 });

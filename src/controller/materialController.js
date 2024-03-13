@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { material, sequelize } = require("../db/sequelize/sequelize");
+const { material, sequelize} = require("../db/sequelize/sequelize");
 const {
   createMaterial,
   deleteMaterial,
@@ -7,9 +7,20 @@ const {
 } = require("../db/crud/materialCrud");
 
 const getMaterials = async (req) => {
-  const res = await material.findAll();
-  return res;
+  const test = await material.findAll();
+  const test2 = await sequelize.query("SELECT * FROM material", {
+    type: sequelize.QueryTypes.SELECT,
+  });
+  return { test, test2 };
 };
+
+const getmaterielById = async (req) => {
+  
+  const id = req.params.id
+  const test = await material.findByPk(id);
+  console.log(test)
+  return test; 
+}
 
 const newMaterialGet = async (req) => {
   const url = req.params;
@@ -89,7 +100,7 @@ const newMaterial = async (req) => {
   const state = body.state;
 
   if (isNaN(price) || price < 0) {
-    return res
+    return res 
       .status(400)
       .send('Le prix doit être positif')
   }
@@ -101,15 +112,12 @@ const newMaterial = async (req) => {
     price: price,
     state: state,
   };
-
-  console.log(req.body)
   const m = await createMaterial(material, data);
-  const newpath = "./src/pictures/materials/" + m.id + ".jpeg"
-  console.log(old_path, newpath);
-  await fs.rename(old_path, newpath, (e) => {
-    if (e) throw e;
-    console.log("File rename");
-  });
+  const newpath = "./src/pictures/materials/" + m.id  + ".jpeg"
+  console.log(old_path,newpath);
+  await fs.rename(old_path,newpath,(e)=>{
+    if(e)throw e;
+  }); 
   return m;
 };
 
@@ -128,7 +136,7 @@ const removeMaterial = async (req, res) => {
 
 const modifyMaterial = async (req, res) => {
   const body = req.body;
-
+  const old_path = req.file.path
   const materialId = parseInt(body.id);
   const name = body.name;
   const description = body.description;
@@ -151,12 +159,17 @@ const modifyMaterial = async (req, res) => {
   };
 
   const m = await updateMaterial(material, materialId, data);
-  return m ? true : false;
+  const newpath = "./src/pictures/materials/" + materialId + ".jpeg"
+  await fs.rename(old_path,newpath,(e)=>{
+    if(e)throw e;
+  }); 
+  return m;
 };
 
 
 module.exports = {
   getMaterials,
+  getmaterielById,
   newMaterialGet,
   removeMaterialGet,
   modifyMaterialGet,

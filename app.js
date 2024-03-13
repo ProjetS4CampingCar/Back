@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-
+app.use("/pictures", express.static(__dirname + '/src/pictures'));
 
 
 app.get("/", (req, res) => {
